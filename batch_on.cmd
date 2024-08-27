@@ -1,1 +1,1 @@
-echo run On Command
+start c:\Windows\System32\notepad.exe

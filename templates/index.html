@@ -1,13 +1,55 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Button Events and Batch File Execution</title>
+        <title>Tuya Switches</title>
+        <style>
+            .button {
+                padding: 20px;
+                font-size: 20px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+    
+            .button:hover {
+                background-color: #3e8e41;  
+    
+            }
+    
+            .button.off {
+                background-color: #f44336;
+            }
+        </style>
     </head>
     <body>
-        <h1>Button Events</h1>
-        <form method="POST" action="/execute_batch">
-            <button type="submit" name="button_value" value="on">On</button>
-            <button type="submit" name="button_value" value="off">Off</button>
-        </form>
-</body>
+        <h1>Tuya Buttons</h1>
+        <button class="button" id="1" onclick="executeBatch(this)">YDSw 1</button>
+        <button class="button" id="2" onclick="executeBatch(this)">YDSw 2</button>
+        <script>
+            function executeBatch(btn) {
+                var xhr = new XMLHttpRequest();
+                var btnNum = btn.id;
+                if (btn.classList.contains("off")) {
+                    btn.classList.remove("off");
+                    // Execute your command-line file here
+                    var btnState = "On";
+                } else {
+                    btn.classList.add("off");
+                    var btnState = "Off";
+                }
+                //alert("Button " + (btnNum) + " was clicked.");
+                xhr.open("POST", "/execute_batch", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Handle the response from the server  
+
+                    console.log(xhr.responseText);
+                    }
+                };
+                xhr.send("btnNum=" + encodeURIComponent(btnNum) + "&btnState=" + encodeURIComponent(btnState))
+            }
+        </script>
+    </body>
 </html>

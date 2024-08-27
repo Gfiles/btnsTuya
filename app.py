@@ -9,8 +9,12 @@ def index():
 
 @app.route('/execute_batch', methods=['POST'])
 def execute_batch():
-    button_value = request.form['button_value']
-    batch_file = f"batch_{button_value}.cmd"  # Adjust batch file name as needed
+    #button_value = request.form['button_value']
+    #batch_file = f"batch_{button_value}.cmd"  # Adjust batch file name as needed
+    btnNum = request.form.get('btnNum')
+    btnState = request.form.get('btnState')
+    print(f"{btnState} {btnNum}")
+    batch_file = "batch_on.cmd"  # Replace with your batch file name
     try:
         result = subprocess.run(batch_file, shell=True, capture_output=True, text=True)
         if result.returncode == 0:
