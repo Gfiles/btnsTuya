@@ -29,7 +29,7 @@ def execute_batch():
 
 @app.route('/get_state')
 def get_state():
-    state = 'Off'  # Replace with your actual state logic
+    state = ["Off", "On"]  # Replace with your actual state logic
     return jsonify({'state': state})
 
 if __name__ == '__main__':

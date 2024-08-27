@@ -57,15 +57,21 @@
                     .then(data => {
                         const state = data.state;
                         const btn = document.getElementById('1');
+                        state.forEach(btnState);
                         //button.textContent = state;
-                        if (state == "On") {
-                            btn.classList.remove("off");
-                        } else {
-                            btn.classList.add("off");
-                        }
+                        
                     });
             }
 
+            function btnState(item, index) {
+                const btn = document.getElementById(index+1);
+                if (item == "On") {
+                    btn.classList.remove("off");
+                }
+                if (item == "Off") {
+                    btn.classList.add("off");
+                }
+            }
             // Call the function initially
             updateButtonState();
         </script>
