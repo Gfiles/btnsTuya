@@ -50,6 +50,24 @@
                 };
                 xhr.send("btnNum=" + encodeURIComponent(btnNum) + "&btnState=" + encodeURIComponent(btnState))
             }
+
+            function updateButtonState() {
+                fetch('/get_state')
+                    .then(response => response.json())
+                    .then(data => {
+                        const state = data.state;
+                        const btn = document.getElementById('1');
+                        //button.textContent = state;
+                        if (state == "On") {
+                            btn.classList.remove("off");
+                        } else {
+                            btn.classList.add("off");
+                        }
+                    });
+            }
+
+            // Call the function initially
+            updateButtonState();
         </script>
     </body>
 </html>

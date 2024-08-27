@@ -1,5 +1,5 @@
 import subprocess
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
@@ -14,6 +14,7 @@ def execute_batch():
     btnNum = request.form.get('btnNum')
     btnState = request.form.get('btnState')
     print(f"{btnState} {btnNum}")
+    """
     batch_file = "batch_on.cmd"  # Replace with your batch file name
     try:
         result = subprocess.run(batch_file, shell=True, capture_output=True, text=True)
@@ -23,6 +24,13 @@ def execute_batch():
             return f"Error executing batch file: {result.stderr}"
     except FileNotFoundError:
         return "Batch file not found."
+    """
+    return "Batch file executed successfully."
+
+@app.route('/get_state')
+def get_state():
+    state = 'Off'  # Replace with your actual state logic
+    return jsonify({'state': state})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
