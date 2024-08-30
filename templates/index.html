@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <title>Tuya Switches</title>
         <style>
+            .w3-button {
+                margin: 10px;
+                /* Other button styles */
+            }
             .button {
                 padding: 20px;
                 font-size: 20px;
@@ -17,15 +22,27 @@
     
             }
     
-            .button.off {
+            .w3-button.off {
                 background-color: #f44336;
             }
         </style>
     </head>
     <body>
-        <h1>Tuya Buttons</h1>
-        <button class="button" id="1" onclick="executeBatch(this)">YDSw 1</button>
-        <button class="button" id="2" onclick="executeBatch(this)">YDSw 2</button>
+        <div class="w3-container w3-teal w3-center">
+            <h1>Tuya Buttons</h1>
+        </div>
+        <div class="w3-center w3-row-padding w3-panel">
+            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="1" onclick="executeBatch(this)">YDSw 01</button>
+            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="2" onclick="executeBatch(this)">YDSw 02</button>
+            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="1" onclick="executeBatch(this)">YDSw 03</button>
+            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="2" onclick="executeBatch(this)">YDSw 04</button>
+            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="1" onclick="executeBatch(this)">YDSw 05</button>
+            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="2" onclick="executeBatch(this)">YDSw 06</button>
+            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="1" onclick="executeBatch(this)">YDSw 07</button>
+            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="2" onclick="executeBatch(this)">YDSw 08</button>
+            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="1" onclick="executeBatch(this)">YDSw 09</button>
+            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="2" onclick="executeBatch(this)">YDSw 10</button>
+        </div>
         <script>
             function executeBatch(btn) {
                 var xhr = new XMLHttpRequest();
@@ -59,7 +76,6 @@
                         const btn = document.getElementById('1');
                         state.forEach(btnState);
                         //button.textContent = state;
-                        
                     });
             }
 
