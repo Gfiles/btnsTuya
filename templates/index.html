@@ -6,90 +6,39 @@
         <style>
             .w3-button {
                 margin: 10px;
+                min-width: 300px;
+                max-width: 50%;
                 /* Other button styles */
             }
-            .button {
-                padding: 20px;
-                font-size: 20px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                cursor: pointer;
-            }
-    
+            
             .button:hover {
                 background-color: #3e8e41;  
-    
             }
     
-            .w3-button.off {
-                background-color: #f44336;
-            }
         </style>
     </head>
     <body>
         <div class="w3-container w3-teal w3-center">
-            <h1>Tuya Buttons</h1>
+            <h1>Babrbie Switches</h1>
         </div>
         <div class="w3-center w3-row-padding w3-panel">
-            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="1" onclick="executeBatch(this)">YDSw 01</button>
-            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="2" onclick="executeBatch(this)">YDSw 02</button>
-            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="1" onclick="executeBatch(this)">YDSw 03</button>
-            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="2" onclick="executeBatch(this)">YDSw 04</button>
-            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="1" onclick="executeBatch(this)">YDSw 05</button>
-            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="2" onclick="executeBatch(this)">YDSw 06</button>
-            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="1" onclick="executeBatch(this)">YDSw 07</button>
-            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="2" onclick="executeBatch(this)">YDSw 08</button>
-            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="1" onclick="executeBatch(this)">YDSw 09</button>
-            <button class="w3-button w3-round-xxlarge w3-jumbo w3-green w3-ripple" id="2" onclick="executeBatch(this)">YDSw 10</button>
+            {% for switch in switches %}
+            <button class="w3-button w3-round-xxlarge
+            {% if switch[2] == True %} 
+                w3-green 
+            {% else %}
+                w3-red 
+            {% endif %}
+            w3-ripple" onclick="toggleSwitch('{{ device_id }}')">
+                <h1>{{ switch[1] }}</h1>
+                <h3>{{ switch[0] }}</h3>{{ switch[3] }} V
+            </button>
+            {% endfor %}
         </div>
         <script>
-            function executeBatch(btn) {
-                var xhr = new XMLHttpRequest();
-                var btnNum = btn.id;
-                if (btn.classList.contains("off")) {
-                    btn.classList.remove("off");
-                    // Execute your command-line file here
-                    var btnState = "On";
-                } else {
-                    btn.classList.add("off");
-                    var btnState = "Off";
-                }
-                //alert("Button " + (btnNum) + " was clicked.");
-                xhr.open("POST", "/execute_batch", true);
-                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Handle the response from the server  
-
-                    console.log(xhr.responseText);
-                    }
-                };
-                xhr.send("btnNum=" + encodeURIComponent(btnNum) + "&btnState=" + encodeURIComponent(btnState))
+            function toggleSwitch(device_id) {
+                window.location.href = "/toggle/" + device_id;
             }
-
-            function updateButtonState() {
-                fetch('/get_state')
-                    .then(response => response.json())
-                    .then(data => {
-                        const state = data.state;
-                        const btn = document.getElementById('1');
-                        state.forEach(btnState);
-                        //button.textContent = state;
-                    });
-            }
-
-            function btnState(item, index) {
-                const btn = document.getElementById(index+1);
-                if (item == "On") {
-                    btn.classList.remove("off");
-                }
-                if (item == "Off") {
-                    btn.classList.add("off");
-                }
-            }
-            // Call the function initially
-            updateButtonState();
         </script>
     </body>
 </html>
