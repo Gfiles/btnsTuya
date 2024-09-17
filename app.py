@@ -1,4 +1,11 @@
-import tinytuya
+"""_summary_
+python -m tinytuya scan
+https://pypi.org/project/tinytuya/
+https://github.com/jasonacox/tinytuya#setup-wizard---getting-local-keys
+python -m tinytuya wizard (get device id and keys)
+https://pimylifeup.com/raspberry-pi-flask-web-app/
+"""
+import tinytuya #pip install tinytuya
 import json
 import os
 import sys
@@ -6,39 +13,39 @@ from flask import Flask, render_template, request, jsonify #pip install Flask
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    switch_states = []
+    voltages = []
+    switchInfo = []
+    i = 0
+    for switch in switches:
+        try:
+            data = switch.status()
+            #print(data)
+            switch_state = data["dps"]["1"]
+            voltage = data["dps"]["20"]
+            switch_states.append(switch_state)
+            voltages.append(voltage)
+            switchTemp = [devices[i][0], devices[i][1], switch_state, voltage/10]
+            switchInfo.append(switchTemp)
+            i = i + 1
+        except Exception as error:
+            print("An exception occurred:", error)
+        #print(switchInfo)
+    return render_template("index.html", switches=switchInfo)
 
-@app.route('/execute_batch', methods=['POST'])
-def execute_batch():
-    #button_value = request.form['button_value']
-    #batch_file = f"batch_{button_value}.cmd"  # Adjust batch file name as needed
-    btnNum = int(request.form.get('btnNum'))
-    btnState = request.form.get('btnState')
-    print(f"{btnState} {btnNum}")
-    
-    if btnState == "On":
-        switch[btnNum-1].turn_on()
-    if btnState == "Off":
-        switch[btnNum-1].turn_off()
-    """
-    batch_file = "batch_on.cmd"  # Replace with your batch file name
-    try:
-        result = subprocess.run(batch_file, shell=True, capture_output=True, text=True)
-        if result.returncode == 0:
-            return "Batch file executed successfully."
-        else:
-            return f"Error executing batch file: {result.stderr}"
-    except FileNotFoundError:
-        return "Batch file not found."
-    """
-    return "Batch file executed successfully."
-
-@app.route('/get_state')
-def get_state():
-    state = ["On", "Off"]  # Replace with your actual state logic
-    return jsonify({'state': state})
+# Route for toggling a switch
+@app.route("/toggle/<device_id>")
+def toggle_switch(device_id):
+    switch = switches[device_id]
+    current_state = switch.status()["dps"]["1"]
+    #new_state = 1 if current_state == 0 else 0
+    if current_state:
+        switch.turn_on()
+    else:
+        switch.turn_off()
+    return redirect("/")
 
 def readConfig():
     settingsFile = os.path.join(cwd, "config.json")
@@ -47,10 +54,10 @@ def readConfig():
             data = json.load(json_file)
     else:
         data = {
-                "description_devices" : ["dev_Name", "dev_id", "address",  "local_key"],
+                "description_devices" : ["dev_Name", "Solution_Name", "dev_id", "address",  "local_key"],
                 "devices" : [
-                    ["Ekaza1", "abcdefghijklmnopqrstuv", "Auto", "local_key_Pass_Code"],
-                    ["Ekaza2", "abcdefghijklmnopqrstuv", "192.168.0.34", "local_key_Pass_Code"]
+                    ["Ekaza1", "SolutionName", "abcdefghijklmnopqrstuv", "Auto", "local_key_Pass_Code"],
+                    ["Ekaza2", "SolutionName", "abcdefghijklmnopqrstuv", "192.168.0.34", "local_key_Pass_Code"]
                 ]
         }
         # Serializing json
@@ -79,13 +86,13 @@ else:
 config = readConfig()
 devices = config["devices"]
 
-switch = list()
+switches = list()
 for item in devices:
-    switch.append(tinytuya.OutletDevice(dev_id=item[1], address=item[2],local_key=item[3],version=3.3))
-
-#for i in range(len(devices)):
-    #print(f"device {devices[i][0]} result: {switch[i].status()}")
-
+    try:
+        new_device = tinytuya.OutletDevice(dev_id=item[2], address=item[3],local_key=item[4],version=3.3)
+        switches.append(new_device)
+    except:
+        print(f"{item[0]} not found")
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=8081)
