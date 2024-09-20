@@ -6,14 +6,6 @@ python -m tinytuya wizard (get device id and keys)
 https://pimylifeup.com/raspberry-pi-flask-web-app/
 """
 import tinytuya #pip install tinytuya
-"""_summary_
-python -m tinytuya scan
-https://pypi.org/project/tinytuya/
-https://github.com/jasonacox/tinytuya#setup-wizard---getting-local-keys
-python -m tinytuya wizard (get device id and keys)
-https://pimylifeup.com/raspberry-pi-flask-web-app/
-"""
-import tinytuya #pip install tinytuya
 import json
 import os
 import sys
@@ -21,7 +13,6 @@ from flask import Flask, render_template, request, jsonify, redirect#pip install
 
 app = Flask(__name__)
 
-@app.route("/")
 @app.route("/")
 def index():
     switchInfo = []
@@ -68,8 +59,6 @@ def readConfig():
                 "devices" : [
                     ["Ekaza1", "SolutionName", "abcdefghijklmnopqrstuv", "Auto", "local_key_Pass_Code"],
                     ["Ekaza2", "SolutionName", "abcdefghijklmnopqrstuv", "192.168.0.34", "local_key_Pass_Code"]
-                    ["Ekaza1", "SolutionName", "abcdefghijklmnopqrstuv", "Auto", "local_key_Pass_Code"],
-                    ["Ekaza2", "SolutionName", "abcdefghijklmnopqrstuv", "192.168.0.34", "local_key_Pass_Code"]
                 ]
         }
         # Serializing json
@@ -100,7 +89,6 @@ devices = config["devices"]
 title = config["title"]
 
 switches = list()
-switches = list()
 for item in devices:
     try:
         new_device = tinytuya.OutletDevice(dev_id=item[2], address=item[3],local_key=item[4],version=3.3)
@@ -110,6 +98,4 @@ for item in devices:
         switches.append(None)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8081)
-
     app.run(debug=True, host='0.0.0.0', port=8081)

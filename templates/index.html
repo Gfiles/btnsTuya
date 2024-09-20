@@ -2,7 +2,6 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <title>Tuya Switches</title>
         <style>
             .tuya-button {
@@ -17,21 +16,24 @@
                 /* Other button styles */
             }
             
-            
             .button:hover {
                 background-color: #3e8e41;  
             }
-    
+            .btn-off {
+                opacity: 0.6;
+                cursor: not-allowed;
         </style>
     </head>
     <body>
         <div class="w3-container w3-teal w3-center">
-            <h1>Babrbie Switches</h1>
+            <h1>{{ title }}</h1>
         </div>
         <div class="w3-center w3-row-padding w3-panel">
             {% for switch in switches %}
             <button class="tuya-button
-            {% if switch[2] == True %} 
+            {% if switch[2] == "offline" %}
+                w3-gray btn-off
+            {% elif switch[2] == True %} 
                 w3-green 
             {% else %}
                 w3-red 
@@ -46,10 +48,6 @@
             function toggleSwitch(device_id) {
                 window.location.href = "/toggle/" + device_id;
             }
-            function toggleSwitch(device_id) {
-                window.location.href = "/toggle/" + device_id;
-            }
         </script>
     </body>
 </html>
-
