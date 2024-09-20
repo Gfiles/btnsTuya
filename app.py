@@ -1,4 +1,11 @@
-import tinytuya
+"""_summary_
+python -m tinytuya scan
+https://pypi.org/project/tinytuya/
+https://github.com/jasonacox/tinytuya#setup-wizard---getting-local-keys
+python -m tinytuya wizard (get device id and keys)
+https://pimylifeup.com/raspberry-pi-flask-web-app/
+"""
+import tinytuya #pip install tinytuya
 import json
 import os
 import sys
