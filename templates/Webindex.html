@@ -26,7 +26,7 @@
     </head>
     <body>
         <div class="w3-container w3-teal w3-center">
-            <h1>{{ title }}</h1>
+            <h1>Tuya Devices</h1>
         </div>
         <div class="w3-center w3-row-padding w3-panel">
             {% for switch in switches %}
@@ -38,7 +38,7 @@
             {% else %}
                 w3-red 
             {% endif %}
-            " onclick="toggleSwitch('{{ switch[0] }}')">
+            " onclick="toggleSwitch('{{ switch[4] }}')">
                 <h1>{{ switch[1] }}</h1>
                 <h3>{{ switch[0] }}</h3>{{ switch[3] }} V
             </button>
