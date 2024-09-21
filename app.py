@@ -10,6 +10,7 @@ import json
 import os
 import sys
 from flask import Flask, render_template, request, jsonify, redirect#pip install Flask
+from waitress import serve
 
 app = Flask(__name__)
 
@@ -37,14 +38,13 @@ def index():
 # Route for toggling a switch
 @app.route("/toggle/<device_id>")
 def toggle_switch(device_id):
-    for i in range(len(devices)):
-        if devices[i][0] == device_id:
-            current_state = switches[i].status()["dps"]["1"]
-            #new_state = 1 if current_state == 0 else 0
-            if current_state:
-                switches[i].turn_off()
-            else:
-                switches[i].turn_on()
+    i = int(device_id) - 1
+    current_state = switches[i].status()["dps"]["1"]
+    #new_state = 1 if current_state == 0 else 0
+    if current_state:
+        switches[i].turn_off()
+    else:
+        switches[i].turn_on()
     return redirect("/")
 
 def readConfig():
@@ -98,4 +98,6 @@ for item in devices:
         switches.append(None)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8081)
+    print("Server Running on http://localhost")
+    #app.run(debug=True, host='0.0.0.0', port=80)
+    serve(app, host="0.0.0.0", port=80)
