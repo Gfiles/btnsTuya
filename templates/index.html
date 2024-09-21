@@ -38,7 +38,7 @@
             {% else %}
                 w3-red 
             {% endif %}
-            " onclick="toggleSwitch('{{ switch[0] }}')">
+            " onclick="toggleSwitch('{{ loop.index }}')">
                 <h1>{{ switch[1] }}</h1>
                 <h3>{{ switch[0] }}</h3>{{ switch[3] }} V
             </button>
