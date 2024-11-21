@@ -1,4 +1,4 @@
-import tinytuya
+import tinytuya # https://github.com/jasonacox/tinytuya
 import json
 import os
 import sys
@@ -81,8 +81,10 @@ devices = config["devices"]
 
 switch = list()
 for item in devices:
-    switch.append(tinytuya.OutletDevice(dev_id=item[1], address=item[2],local_key=item[3],version=3.3))
-
+    try:
+        switch.append(tinytuya.OutletDevice(dev_id=item[1], address=item[2],local_key=item[3],version=3.3))
+    except:
+        print(f"{item[0] not found}")
 #for i in range(len(devices)):
     #print(f"device {devices[i][0]} result: {switch[i].status()}")
 
