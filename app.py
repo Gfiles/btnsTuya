@@ -21,14 +21,20 @@ def index():
     for switch in switches:
         try:
             if switch == None:
-                switchInfo.append([devices[i][0], devices[i][1], "offline", 0])             
+                switchInfo.append([devices[i]["name"], devices[i]["solutionName"], "offline", 0])             
             else:
-                data = switch.status()
-                #print(data)
-                switch_state = data["dps"]["1"]
-                voltage = data["dps"]["20"]
-                switchTemp = [devices[i][0], devices[i][1], switch_state, voltage/10]
-                switchInfo.append(switchTemp)
+                try:
+                    data = switch.status()
+                    #print(data)
+                    switch_state = data["dps"]["1"]
+                    try:
+                        voltage = data["dps"]["20"]/10
+                    except:
+                        voltage = 0
+                    switchTemp = [devices[i]["name"], devices[i]["solutionName"], switch_state, voltage]
+                    switchInfo.append(switchTemp)
+                except:
+                    [devices[i]["name"], devices[i]["solutionName"], "offline", 0]
             i = i + 1
         except Exception as error:
             print("An exception occurred:", error)
@@ -47,18 +53,16 @@ def toggle_switch(device_id):
         switches[i].turn_on()
     return redirect("/")
 
-def readConfig():
-    settingsFile = os.path.join(cwd, "config.json")
+def readConfig(settingsFile):
     if os.path.isfile(settingsFile):
         with open(settingsFile) as json_file:
             data = json.load(json_file)
     else:
         data = {
                 "title" : "Title",
-                "description_devices" : ["dev_Name", "Solution_Name", "dev_id", "address",  "local_key"],
                 "devices" : [
-                    ["Ekaza1", "SolutionName", "abcdefghijklmnopqrstuv", "Auto", "local_key_Pass_Code"],
-                    ["Ekaza2", "SolutionName", "abcdefghijklmnopqrstuv", "192.168.0.34", "local_key_Pass_Code"]
+                    {"name": "YDSw010", "solutionName" : "solutionName"},
+                    {"name": "YDSw011", "solutionName" : "solutionName"},
                 ]
         }
         # Serializing json
@@ -82,16 +86,37 @@ else:
     cwd = os.path.dirname(this_file)
     
 #print("Current working directory:", cwd)
+#Scan for local Tuya DEvices
+tinytuya.scan()
 
 # Read Config File
-config = readConfig()
-devices = config["devices"]
+settingsFile = os.path.join(cwd, "config.json")
+config = readConfig(settingsFile)
+settingsDevices = config["devices"]
 title = config["title"]
+
+tuyaDevices = readConfig(os.path.join(cwd, "snapshot.json"))
+localDevices = tuyaDevices["devices"]
+devices = list()
+for device in localDevices:
+    if device["ip"] != "":
+        j = dict()
+        j.update({"name" : device["name"]})
+        j.update({"ip" : device["ip"]})
+        j.update({"id" : device["id"]})
+        j.update({"key" : device["key"]})
+        j.update({"solutionName" : device["name"]})
+        for solutionName in settingsDevices:
+            if device["name"] == solutionName["name"]:
+                j.update({"solutionName" : solutionName["solutionName"]})
+                break
+        devices.append(j)
+#print(devices)
 
 switches = list()
 for item in devices:
     try:
-        new_device = tinytuya.OutletDevice(dev_id=item[2], address=item[3],local_key=item[4],version=3.3)
+        new_device = tinytuya.OutletDevice(dev_id=item["id"], address=item["ip"], local_key=item["key"], version=3.4)
         switches.append(new_device)
     except:
         print(f"{item[0]} not found")
